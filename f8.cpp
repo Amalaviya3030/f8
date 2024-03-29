@@ -9,6 +9,12 @@
 
 #include <stdio.h>
 
+typedef struct MyData {
+    int howMany;
+    char theText[21];
+    char directoryPath[21];
+    char filename[21];
+}myArgs;
 
 void main()
 {
