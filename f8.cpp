@@ -8,6 +8,12 @@
  */
 
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define MAX_FILENAME_LENGTH 256
+#pragma warning(disable : 4996)
+
 
 typedef struct MyData {
     int howMany;
@@ -21,10 +27,40 @@ void main(int argc, char* argv[])
     MyData myArgs;
 
     // making myArgs (also assigning the values to the variable) in the function
-    if (!parseArguments(argc, argv, &myArgs)) {
+    if (!parseArguments(argc, argv, &myArgs)) 
+    {
         return 0;
     }
+
+    // calling the function for writing theText to the file howMany times
+    createTextFile(&myArgs);
 }
+
+void createTextFile(MyData* args) {
+    FILE* file;
+    char fullFilePath[MAX_FILENAME_LENGTH];
+
+    // Constructing the full file path
+    snprintf(fullFilePath, MAX_FILENAME_LENGTH, "%s\\%s", args->directoryPath, args->filename);
+
+    // Opening the file for writing
+    file = fopen(fullFilePath, "w"); //opening file in writing mode
+    // checking if the file exits at a particular path given by the user
+    if (file == NULL) {
+        fprintf(stderr, "Can't open file % s\n", fullFilePath);
+        exit(1);
+    }
+
+    // Writing theText to the file howMany times
+    for (int i = 0; i < args->howMany; i++) {
+        fprintf(file, "%s\n", args->theText);
+    }
+
+    // Closing the file
+    fclose(file);
+    printf("Text file created successfully.\n");
+}
+
 int parseArguments(int argc, char* argv[], MyData* data) {
 
     //  4+1 because 4 argument from the comand line and 1 1 plus the number of arguments,
